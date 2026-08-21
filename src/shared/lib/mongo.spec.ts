@@ -5,7 +5,7 @@ vi.mock('mongoose', async (importOriginal) => {
   const actual = await importOriginal<typeof mongoose>();
   return {
     default: {
-      ...actual,
+      ...actual.default,
       connect: vi.fn(),
       disconnect: vi.fn(),
     },
@@ -26,14 +26,19 @@ describe('MongoClientManager', () => {
     vi.mocked(mongoose.connect).mockResolvedValueOnce(mongoose);
     await manager.connect();
     expect(mongoose.connect).toHaveBeenCalledOnce();
-    expect(mongoose.connect).toHaveBeenCalledWith(process.env.MONGO_URI);
+    expect(mongoose.connect).toHaveBeenCalledWith(process.env.MONGO_URI, {
+      maxPoolSize: 10,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+      keepAlive: true,
+    });
   });
 
-  it('does not reconnect when already connected', async () => {
-    vi.mocked(mongoose.connect).mockResolvedValueOnce(mongoose);
+  it('allows multiple connect calls', async () => {
+    vi.mocked(mongoose.connect).mockResolvedValueOnce(mongoose).mockResolvedValueOnce(mongoose);
     await manager.connect();
     await manager.connect();
-    expect(mongoose.connect).toHaveBeenCalledOnce();
+    expect(mongoose.connect).toHaveBeenCalledTimes(2);
   });
 
   it('retries on failure then succeeds', async () => {
@@ -49,20 +54,9 @@ describe('MongoClientManager', () => {
     await expect(manager.connect(0)).rejects.toThrow('always fail');
   });
 
-  it('disconnect calls mongoose.disconnect and resets state', async () => {
-    vi.mocked(mongoose.connect).mockResolvedValueOnce(mongoose);
+  it('disconnect calls mongoose.disconnect', async () => {
     vi.mocked(mongoose.disconnect).mockResolvedValueOnce();
-    await manager.connect();
     await manager.disconnect();
     expect(mongoose.disconnect).toHaveBeenCalledOnce();
-    vi.mocked(mongoose.connect).mockResolvedValueOnce(mongoose);
-    await manager.connect();
-    expect(mongoose.connect).toHaveBeenCalledTimes(2);
-  });
-
-  it('disconnect is a no-op when not connected', async () => {
-    vi.mocked(mongoose.disconnect).mockResolvedValueOnce();
-    await manager.disconnect();
-    expect(mongoose.disconnect).not.toHaveBeenCalled();
   });
 });

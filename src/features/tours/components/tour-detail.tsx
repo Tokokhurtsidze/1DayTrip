@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
-import { BookButton } from '@/features/bookings/components/book-button';
 import { Tour } from '@/features/tours/types/tour.types';
 import { Footer } from '@/shared/components/layout/footer';
 import { Header } from '@/shared/components/layout/header';
@@ -88,10 +87,6 @@ export function TourDetail({ tour }: TourDetailProps) {
             <p className="mt-2 whitespace-pre-line leading-relaxed text-muted-foreground">
               {tour.itinerary[locale]}
             </p>
-          </div>
-
-          <div className="mt-8 max-w-xs">
-            <BookButton tour={tour} />
           </div>
         </section>
       </main>

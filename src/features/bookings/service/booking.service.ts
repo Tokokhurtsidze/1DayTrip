@@ -63,17 +63,21 @@ export async function completeBookingService(
 
   const user = await userRepository.findById(booking.userId.toString());
   if (user) {
-    await mailer.sendBookingConfirmationEmail(
-      user.email,
-      {
-        tourTitle: tour.title[locale],
-        bookingDate: booking.bookingDate.toISOString(),
-        paidAmount: booking.paidAmount,
-        transactionId,
-        meetingPoint: tour.meetingPoint,
-      },
-      locale
-    );
+    try {
+      await mailer.sendBookingConfirmationEmail(
+        user.email,
+        {
+          tourTitle: tour.title[locale],
+          bookingDate: booking.bookingDate.toISOString(),
+          paidAmount: booking.paidAmount,
+          transactionId,
+          meetingPoint: tour.meetingPoint,
+        },
+        locale
+      );
+    } catch {
+      // email sending is best-effort; do not block booking completion
+    }
   }
 
   const updated = await bookingRepository.findById(bookingId);

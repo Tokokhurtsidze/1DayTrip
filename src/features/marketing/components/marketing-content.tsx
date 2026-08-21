@@ -135,7 +135,13 @@ export const MarketingContent = () => {
             {t.home.destinations.items.map((dest) => (
               <div key={dest.title} className="group relative overflow-hidden rounded-2xl bg-muted/50 transition-all hover:shadow-xl hover:-translate-y-1">
                 <div className="relative h-72 w-full overflow-hidden">
-                  <Image src={dest.img} alt={dest.title} fill className="object-cover transition-transform duration-500 group-hover:scale-110" sizes="(max-width: 768px) 100vw, 33vw" />
+                  <Image
+                    src={dest.img}
+                    alt={dest.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80" />
                 </div>
                 <div className="absolute bottom-0 p-6 text-white w-full">
@@ -183,7 +189,10 @@ export const MarketingContent = () => {
 
         {/* Section 3: Testimonials */}
         <section className="relative mx-auto w-full max-w-5xl px-6 py-24 sm:px-10">
-          <div className="absolute top-1/2 left-1/2 -z-10 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/20 blur-[120px]" aria-hidden="true" />
+          <div
+            className="absolute top-1/2 left-1/2 -z-10 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/20 blur-[120px]"
+            aria-hidden="true"
+          />
           
           <div className="flex flex-col items-center text-center">
             <span className="text-xs font-semibold uppercase tracking-widest text-primary">{t.home.testimonials.kicker}</span>

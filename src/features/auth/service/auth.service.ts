@@ -18,7 +18,11 @@ export async function registerService(
     role: 'user',
   });
 
-  await mailer.sendWelcomeEmail(input.email, input.fullName);
+  try {
+    await mailer.sendWelcomeEmail(input.email, input.fullName);
+  } catch {
+    // email sending is best-effort; do not block registration
+  }
 
   return { data: { message: 'Account created' }, status: 201 };
 }

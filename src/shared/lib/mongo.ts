@@ -4,13 +4,14 @@ const MAX_RETRIES = 5;
 const RETRY_DELAY_MS = 1000;
 
 class MongoClientManager {
-  private isConnected = false;
-
   async connect(retries = MAX_RETRIES): Promise<void> {
-    if (this.isConnected) return;
     try {
-      await mongoose.connect(process.env.MONGO_URI!);
-      this.isConnected = true;
+      await mongoose.connect(process.env.MONGO_URI!, {
+        maxPoolSize: 10,
+        serverSelectionTimeoutMS: 5000,
+        socketTimeoutMS: 45000,
+        keepAlive: true,
+      });
       console.log('Connected to MongoDB');
     } catch (error) {
       if (retries <= 0) {
@@ -24,10 +25,7 @@ class MongoClientManager {
   }
 
   async disconnect(): Promise<void> {
-    if (this.isConnected) {
-      await mongoose.disconnect();
-      this.isConnected = false;
-    }
+    await mongoose.disconnect();
   }
 }
 
