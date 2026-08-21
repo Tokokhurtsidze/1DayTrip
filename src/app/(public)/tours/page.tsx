@@ -5,14 +5,15 @@ export const dynamic = 'force-dynamic';
 
 async function getTours() {
   try {
-    const { data } = await listToursService(1, 50);
-    return 'items' in data ? data.items : [];
+    const { data, status } = await listToursService(1, 50);
+    if (status !== 200 || !('items' in data)) return { items: [], error: null };
+    return { items: data.items, error: null };
   } catch {
-    return [];
+    return { items: [], error: 'LOAD_FAILED' };
   }
 }
 
 export default async function ToursPage() {
-  const tours = await getTours();
-  return <ToursListing tours={tours} />;
+  const { items, error } = await getTours();
+  return <ToursListing tours={items} error={error} />;
 }

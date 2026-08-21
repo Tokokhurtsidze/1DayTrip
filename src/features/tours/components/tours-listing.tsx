@@ -10,6 +10,7 @@ import { useTranslations } from '@/shared/hooks/use-translations';
 
 type ToursListingProps = {
   tours: Tour[];
+  error?: string | null;
 };
 
 const BANNER_IMAGE =
@@ -45,7 +46,11 @@ export function ToursListing({ tours }: ToursListingProps) {
         </section>
 
         <section className="mx-auto w-full max-w-5xl px-6 pb-24 sm:px-10">
-          {tours.length === 0 ? (
+          {error ? (
+            <div className="glass-panel rounded-lg p-8 text-center text-sm text-destructive">
+              Unable to load tours right now. Please try again later.
+            </div>
+          ) : tours.length === 0 ? (
             <div className="glass-panel rounded-lg p-8 text-center text-sm text-muted-foreground">
               {t.tours.empty}
             </div>
