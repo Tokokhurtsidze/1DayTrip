@@ -30,7 +30,6 @@ describe('MongoClientManager', () => {
       maxPoolSize: 10,
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
-      keepAlive: true,
     });
   });
 
